@@ -16,5 +16,11 @@ read -d '' -r -a lines < titles.txt
 
 # Print each row
 for i in ${!users[@]}; do
-    printf "^%s^%s^%s^%s^%s\n" ${users[$i]} ${views[$i]} ${times[$i]} ${ids[$i]} ${lines[$i]}
+    line=$(echo "${lines[$i]}" | sed 's/,/COMMA/g')
+    printf "^%s^%s^%s^%s^%s\n" ${users[$i]} ${views[$i]} ${times[$i]} ${ids[$i]} $line
 done | column -ts '^'
+
+for i in ${!users[@]}; do
+    line=$(echo "${lines[$i]}" | sed 's/,/COMMA/g')
+    printf '%s,%s,%s,%s\n' ${users[$i]} ${views[$i]} ${ids[$i]} $line | paste -d ' ' - - - - >> table.csv
+done
